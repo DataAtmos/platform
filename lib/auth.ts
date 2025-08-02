@@ -57,15 +57,9 @@ export const auth = betterAuth({
     }),
     multiSession(),
     passkey({
-      rpID:
-        process.env.NODE_ENV === "production"
-          ? process.env.PASSKEY_RP_ID || "localhost"
-          : "localhost",
+      rpID: "dataatmos.ai",
       rpName: "Data Atmos",
-      origin:
-        process.env.NODE_ENV === "production"
-          ? process.env.BETTER_AUTH_URL || "http://localhost:3000"
-          : "http://localhost:3000",
+      origin: "https://dataatmos.ai",
     }),
   ],
 
