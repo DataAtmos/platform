@@ -15,7 +15,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { client, signOut, useSession } from "@/lib/auth-client"
-import { Edit, Laptop, Loader2, LogOut, ShieldCheck, ShieldOff, AlertCircle } from "lucide-react"
+import {
+  Edit,
+  Laptop,
+  Loader2,
+  LogOut,
+  ShieldCheck,
+  ShieldOff,
+  AlertCircle,
+  Smartphone,
+  Monitor,
+  Globe,
+  User,
+  Key,
+  Shield,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
@@ -66,10 +80,40 @@ export default function ProfileContent({
 
   const removeActiveSession = (id: string) => setActiveSessions(activeSessions.filter((session) => session.id !== id))
 
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((part) => part.charAt(0))
+      .join("")
+      .toUpperCase()
+      .slice(0, 2)
+  }
+
+  const getDeviceIcon = (userAgent?: string) => {
+    if (!userAgent) return <Monitor className="h-4 w-4" />
+
+    const parser = new UAParser(userAgent)
+    const device = parser.getDevice()
+
+    if (device.type === "mobile") return <Smartphone className="h-4 w-4" />
+    if (device.type === "tablet") return <Laptop className="h-4 w-4" />
+    return <Monitor className="h-4 w-4" />
+  }
+
+  const getDeviceInfo = (userAgent?: string) => {
+    if (!userAgent) return "Unknown device"
+
+    const parser = new UAParser(userAgent)
+    const browser = parser.getBrowser()
+    const os = parser.getOS()
+
+    return `${browser.name || "Unknown"} on ${os.name || "Unknown"}`
+  }
+
   if (isPending) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-6 w-6 animate-spin" />
+        <div className="loading-shimmer h-8 w-8"></div>
       </div>
     )
   }
@@ -79,194 +123,209 @@ export default function ProfileContent({
   }
 
   return (
-    <div className="min-h-screen bg-platform-canvas-default">
-      <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-5xl mx-auto px-5 py-8">
         <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <h1 className="platform-heading-lg">Account Settings</h1>
-            <p className="platform-text-muted">Manage your account settings and security preferences.</p>
+          {/* Header */}
+          <div className="pb-6 border-b border-border">
+            <h1 className="text-2xl font-bold text-foreground mb-2">Account Settings</h1>
+            <p className="text-muted-foreground">Manage your account settings and security preferences.</p>
           </div>
 
+          {/* Profile Section */}
           <div className="space-y-6">
-            <div className="space-y-4">
-              <h2 className="platform-text-sm font-medium text-platform-fg-default">Profile</h2>
-              <div className="space-y-4">
-                <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2 mb-4">
+              <User className="h-5 w-5" />
+              <h2 className="text-lg font-semibold text-foreground">Profile Information</h2>
+            </div>
+
+            <div className="flex items-start justify-between p-4 border border-border bg-github-subtle">
+              <div className="flex items-center gap-4">
+                <Avatar className="profile-avatar h-16 w-16">
+                  <AvatarImage src={session?.user.image || undefined} alt="Avatar" className="object-cover" />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-lg font-semibold">
+                    {getInitials(session?.user.name || "")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={session?.user.image || undefined} alt="Avatar" className="object-cover" />
-                      <AvatarFallback className="text-sm bg-platform-accent-emphasis text-platform-fg-on-emphasis font-medium">
-                        {session?.user.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="platform-text-sm font-medium text-platform-fg-default">{session?.user.name}</p>
-                        {session?.user.emailVerified && (
-                          <span className="inline-flex items-center px-2 py-0.5 platform-text-xs font-medium bg-platform-success-subtle text-platform-success-fg border border-platform-success-emphasis/20">
-                            Verified
-                          </span>
-                        )}
-                      </div>
-                      <p className="platform-text-xs text-platform-fg-muted">{session?.user.email}</p>
-                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">{session?.user.name}</h3>
+                    {session?.user.emailVerified ? (
+                      <span className="status-verified">Verified</span>
+                    ) : (
+                      <span className="status-unverified">Unverified</span>
+                    )}
                   </div>
-                  <EditUserDialog />
+                  <p className="text-sm text-muted-foreground">{session?.user.email}</p>
                 </div>
-
-                {!session?.user.emailVerified && (
-                  <div className="bg-platform-attention-subtle border border-platform-attention-emphasis/20 p-4">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="h-4 w-4 text-platform-attention-emphasis flex-shrink-0 mt-0.5" />
-                      <div className="space-y-3">
-                        <div>
-                          <p className="platform-text-sm font-medium text-platform-attention-fg">Verify Your Email Address</p>
-                          <p className="platform-text-xs text-platform-fg-muted mt-1">
-                            Please verify your email address. Check your inbox for the verification email.
-                          </p>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="platform-text-xs bg-transparent"
-                          onClick={async () => {
-                            await client.sendVerificationEmail(
-                              { email: session?.user.email || "" },
-                              {
-                                onRequest() {
-                                  setEmailVerificationPending(true)
-                                },
-                                onError(context) {
-                                  toast.error(context.error.message)
-                                  setEmailVerificationPending(false)
-                                },
-                                onSuccess() {
-                                  toast.success("Verification email sent successfully")
-                                  setEmailVerificationPending(false)
-                                },
-                              },
-                            )
-                          }}
-                        >
-                          {emailVerificationPending ? (
-                            <Loader2 size={12} className="animate-spin" />
-                          ) : (
-                            "Resend Verification Email"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
+              <EditUserDialog />
             </div>
 
-            <div className="space-y-4">
-              <h2 className="platform-text-sm font-medium text-platform-fg-default">Active Sessions</h2>
-              <div className="space-y-2">
-                {activeSessions
-                  .filter((session) => session.userAgent)
-                  .map((session) => {
-                    const parser = new UAParser(session.userAgent || "")
-                    const device = parser.getDevice()
-                    const os = parser.getOS()
-                    const browser = parser.getBrowser()
-
-                    return (
-                      <div
-                        key={session.id}
-                        className="flex items-center justify-between p-3 border border-platform-border-default bg-platform-canvas-default"
-                      >
-                        <div className="flex items-center gap-3">
-                          {device.type === "mobile" ? (
-                            <div className="h-4 w-4 text-platform-fg-muted">📱</div>
-                          ) : (
-                            <Laptop className="h-4 w-4 text-platform-fg-muted" />
-                          )}
-                          <div>
-                            <p className="platform-text-sm font-medium text-platform-fg-default">
-                              {os.name} • {browser.name}
-                            </p>
-                            <p className="platform-text-xs text-platform-fg-muted">
-                              {session.id === initialSession?.session.id ? "Current session" : "Other session"}
-                            </p>
-                          </div>
-                        </div>
-                                                 <Button
-                           variant="ghost"
-                           size="sm"
-                           className="platform-text-xs"
-                           disabled={isTerminating === session.id}
-                           onClick={async () => {
-                             setIsTerminating(session.id)
-                             try {
-                               await client.revokeSession({ token: session.token })
-                               removeActiveSession(session.id)
-                               toast.success("Session terminated successfully")
-                               if (session.id === initialSession?.session.id) router.refresh()
-                             } catch (error: unknown) {
-                               const errorMessage = error instanceof Error ? error.message : "Failed to terminate session"
-                               toast.error(errorMessage)
-                             } finally {
-                               setIsTerminating(undefined)
-                             }
-                           }}
-                         >
-                           {isTerminating === session.id ? (
-                             <Loader2 size={12} className="animate-spin" />
-                           ) : (
-                             "Terminate"
-                           )}
-                         </Button>
-                      </div>
-                    )
-                  })}
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="platform-text-sm font-medium text-platform-fg-default">Security</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 border border-platform-border-default bg-platform-canvas-default">
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-4 w-4 text-platform-fg-muted" />
+            {!session?.user.emailVerified && (
+              <div className="alert-github alert-warning">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <p className="platform-text-sm font-medium text-platform-fg-default">Two-Factor Authentication</p>
-                      <p className="platform-text-xs text-platform-fg-muted">
-                        {session?.user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                      <p className="font-medium">Verify Your Email Address</p>
+                      <p className="text-sm mt-1">
+                        Please verify your email address. Check your inbox for the verification email.
                       </p>
                     </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={emailVerificationPending}
+                      onClick={async () => {
+                        await client.sendVerificationEmail(
+                          { email: session?.user.email || "" },
+                          {
+                            onRequest() {
+                              setEmailVerificationPending(true)
+                            },
+                            onError(context) {
+                              toast.error(context.error.message)
+                              setEmailVerificationPending(false)
+                            },
+                            onSuccess() {
+                              toast.success("Verification email sent successfully")
+                              setEmailVerificationPending(false)
+                            },
+                          },
+                        )
+                      }}
+                    >
+                      {emailVerificationPending ? <Loader2 className="h-3 w-3 animate-spin" /> : "Resend Email"}
+                    </Button>
                   </div>
-                  <TwoFactorDialog session={session} router={router} />
-                </div>
-
-                <div className="flex items-center justify-between p-3 border border-platform-border-default bg-platform-canvas-default">
-                  <div className="flex items-center gap-3">
-                    <ShieldOff className="h-4 w-4 text-platform-fg-muted" />
-                    <div>
-                      <p className="platform-text-sm font-medium text-platform-fg-default">Change Password</p>
-                      <p className="platform-text-xs text-platform-fg-muted">Update your account password</p>
-                    </div>
-                  </div>
-                  <ChangePasswordDialog />
                 </div>
               </div>
+            )}
+          </div>
+
+          <div className="section-divider"></div>
+
+          {/* Active Sessions */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Globe className="h-5 w-5" />
+              <h2 className="text-lg font-semibold text-foreground">Active Sessions</h2>
             </div>
 
-            <div className="space-y-4">
-              <h2 className="platform-text-sm font-medium text-platform-fg-default">Passkeys</h2>
+            <div className="space-y-3">
+              {activeSessions
+                .filter((session) => session.userAgent)
+                .map((session) => (
+                  <div
+                    key={session.id}
+                    className="flex items-center justify-between p-4 border border-border hover:bg-github-subtle transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      {getDeviceIcon(session.userAgent)}
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{getDeviceInfo(session.userAgent)}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {session.id === initialSession?.session.id ? "Current session" : "Other session"}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={isTerminating === session.id}
+                      onClick={async () => {
+                        setIsTerminating(session.id)
+                        try {
+                          await client.revokeSession({ token: session.token })
+                          removeActiveSession(session.id)
+                          toast.success("Session terminated successfully")
+                          if (session.id === initialSession?.session.id) router.refresh()
+                        } catch (error: unknown) {
+                          const errorMessage = error instanceof Error ? error.message : "Failed to terminate session"
+                          toast.error(errorMessage)
+                        } finally {
+                          setIsTerminating(undefined)
+                        }
+                      }}
+                    >
+                      {isTerminating === session.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Terminate"}
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          </div>
+
+          <div className="section-divider"></div>
+
+          {/* Security Settings */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="h-5 w-5" />
+              <h2 className="text-lg font-semibold text-foreground">Security Settings</h2>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-4 border border-border">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Two-Factor Authentication</p>
+                    <p className="text-xs text-muted-foreground">
+                      {session?.user.twoFactorEnabled ? "Enabled" : "Disabled"}
+                    </p>
+                  </div>
+                </div>
+                <TwoFactorDialog session={session} router={router} />
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-border">
+                <div className="flex items-center gap-3">
+                  <Key className="h-4 w-4 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Change Password</p>
+                    <p className="text-xs text-muted-foreground">Update your account password</p>
+                  </div>
+                </div>
+                <ChangePasswordDialog />
+              </div>
+            </div>
+          </div>
+
+          <div className="section-divider"></div>
+
+          {/* Passkeys */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Key className="h-5 w-5" />
+              <h2 className="text-lg font-semibold text-foreground">Passkeys</h2>
+            </div>
+            <div className="p-4 border border-border">
               <PasskeyManagement />
             </div>
+          </div>
 
-                         <div className="space-y-4">
-               <h2 className="platform-text-sm font-medium text-platform-fg-default">Backup Codes</h2>
-               <BackupCodesManagement session={session} />
-             </div>
+          <div className="section-divider"></div>
 
-            <div className="pt-6 border-t border-platform-border-muted">
+          {/* Backup Codes */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield className="h-5 w-5" />
+              <h2 className="text-lg font-semibold text-foreground">Backup Codes</h2>
+            </div>
+            <div className="p-4 border border-border">
+              <BackupCodesManagement session={session} />
+            </div>
+          </div>
+
+          <div className="section-divider"></div>
+
+          {/* Sign Out */}
+          <div className="space-y-6">
+            <div className="p-4 border border-destructive/30 bg-destructive/5">
               <Button
-                variant="outline"
-                className="w-full platform-btn platform-btn-outline text-platform-danger-fg border-platform-danger-emphasis hover:bg-platform-danger-subtle hover:text-platform-danger-fg"
+                variant="destructive"
+                className="w-full"
                 disabled={isSignOut}
                 onClick={async () => {
                   setIsSignOut(true)
@@ -288,7 +347,7 @@ export default function ProfileContent({
               >
                 {isSignOut ? (
                   <>
-                    <Loader2 size={12} className="animate-spin mr-2" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Signing out...
                   </>
                 ) : (
@@ -306,6 +365,7 @@ export default function ProfileContent({
   )
 }
 
+// Dialog components with updated styling
 function EditUserDialog() {
   const { data } = useSession()
   const [name, setName] = useState<string>()
@@ -316,21 +376,19 @@ function EditUserDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" className="platform-text-xs bg-transparent">
-          <Edit className="h-3 w-3 mr-1" />
-          Edit
+        <Button size="sm" variant="outline">
+          <Edit className="h-3 w-3 mr-2" />
+          Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogDescription>Update your profile information</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="platform-text-sm font-medium">
-              Full Name
-            </Label>
+            <Label htmlFor="name">Full Name</Label>
             <Input
               id="name"
               placeholder={data?.user.name}
@@ -360,7 +418,7 @@ function EditUserDialog() {
               setIsLoading(false)
             }}
           >
-            {isLoading ? <Loader2 size={12} className="animate-spin" /> : "Update"}
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Update Profile"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -383,16 +441,21 @@ function TwoFactorDialog({
   return (
     <Dialog open={twoFactorDialog} onOpenChange={setTwoFactorDialog}>
       <DialogTrigger asChild>
-        <Button variant={session?.user.twoFactorEnabled ? "destructive" : "outline"} size="sm" className="platform-text-xs">
+        <Button variant={session?.user.twoFactorEnabled ? "destructive" : "default"} size="sm">
           {session?.user.twoFactorEnabled ? (
-            <ShieldOff className="h-3 w-3 mr-1" />
+            <>
+              <ShieldOff className="h-3 w-3 mr-2" />
+              Disable 2FA
+            </>
           ) : (
-            <ShieldCheck className="h-3 w-3 mr-1" />
+            <>
+              <ShieldCheck className="h-3 w-3 mr-2" />
+              Enable 2FA
+            </>
           )}
-          {session?.user.twoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{session?.user.twoFactorEnabled ? "Disable 2FA" : "Enable 2FA"}</DialogTitle>
           <DialogDescription>
@@ -405,13 +468,11 @@ function TwoFactorDialog({
         <div className="space-y-4">
           {twoFactorVerifyURI ? (
             <div className="space-y-4">
-              <div className="flex justify-center p-4 bg-platform-canvas-subtle border border-platform-border-default rounded-lg">
+              <div className="flex justify-center p-4 bg-muted border border-border">
                 <QRCode value={twoFactorVerifyURI} size={160} />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="otp" className="platform-text-sm font-medium">
-                  Enter verification code from your app
-                </Label>
+                <Label htmlFor="otp">Enter verification code from your app</Label>
                 <Input
                   id="otp"
                   value={twoFaPassword}
@@ -423,9 +484,7 @@ function TwoFactorDialog({
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="password" className="platform-text-sm font-medium">
-                Password
-              </Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
@@ -496,7 +555,7 @@ function TwoFactorDialog({
             }}
           >
             {isPendingTwoFa ? (
-              <Loader2 size={12} className="animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : session?.user.twoFactorEnabled ? (
               "Disable 2FA"
             ) : twoFactorVerifyURI ? (
@@ -522,20 +581,18 @@ function ChangePasswordDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="platform-text-xs bg-transparent">
+        <Button variant="outline" size="sm">
           Change Password
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Change Password</DialogTitle>
           <DialogDescription>Update your account password</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="current-password" className="platform-text-sm font-medium">
-              Current Password
-            </Label>
+            <Label htmlFor="current-password">Current Password</Label>
             <Input
               id="current-password"
               type="password"
@@ -545,9 +602,7 @@ function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="new-password" className="platform-text-sm font-medium">
-              New Password
-            </Label>
+            <Label htmlFor="new-password">New Password</Label>
             <Input
               id="new-password"
               type="password"
@@ -557,9 +612,7 @@ function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirm-password" className="platform-text-sm font-medium">
-              Confirm Password
-            </Label>
+            <Label htmlFor="confirm-password">Confirm Password</Label>
             <Input
               id="confirm-password"
               type="password"
@@ -574,7 +627,7 @@ function ChangePasswordDialog() {
               checked={signOutDevices}
               onCheckedChange={(checked) => setSignOutDevices(checked as boolean)}
             />
-            <label htmlFor="sign-out-devices" className="platform-text-sm">
+            <label htmlFor="sign-out-devices" className="text-sm">
               Sign out from other devices
             </label>
           </div>
@@ -608,7 +661,7 @@ function ChangePasswordDialog() {
               }
             }}
           >
-            {loading ? <Loader2 size={12} className="animate-spin" /> : "Change Password"}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Change Password"}
           </Button>
         </DialogFooter>
       </DialogContent>
