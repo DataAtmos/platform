@@ -21,6 +21,9 @@ const pool = createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const mysql = new MysqlDialect(pool);
@@ -34,12 +37,11 @@ export const auth = betterAuth({
 
   plugins: [
     nextCookies(),
-    bearer(), // Add bearer plugin for JWT API access
-    openAPI(), // Add OpenAPI plugin for API documentation
-    jwt(), // JWT plugin for token generation
+    bearer(),
+    openAPI(),
+    jwt(),
     admin({
-      // Add admin plugin - you can set admin user IDs here
-      adminUserIds: [], // Add admin user IDs when needed
+      adminUserIds: [],
     }),
     twoFactor({
       issuer: "Data Atmos",

@@ -28,16 +28,12 @@ export function Navbar() {
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
         <div className="flex h-14 items-center justify-between px-5">
-          {/* Left side - Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image src={logoSrc || "/placeholder.svg"} alt="Data Atmos" width={24} height={24} className="h-6 w-6" />
             </Link>
           </div>
-
-          {/* Right side - Navigation */}
           <div className="flex items-center gap-3">
-            {/* Desktop navigation */}
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <>
@@ -64,8 +60,6 @@ export function Navbar() {
               )}
               <ThemeToggle />
             </div>
-
-            {/* Mobile navigation */}
             <div className="flex items-center gap-2 md:hidden">
               {user && <UserDropdown user={user} />}
               <ThemeToggle />
@@ -76,8 +70,6 @@ export function Navbar() {
             </div>
           </div>
         </div>
-
-        {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="border-t border-border bg-background md:hidden">
             <div className="px-5 py-4">
@@ -123,6 +115,9 @@ export function Navbar() {
           </div>
         )}
       </header>
+      <div className="w-full text-center text-[11px] py-1 px-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border-b border-blue-200 dark:border-blue-800">
+        Notice: Free MySQL server in use; performance might be slow.
+      </div>
     </>
   )
 }
