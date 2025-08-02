@@ -79,15 +79,15 @@ export default function BackupCodeVerificationPage() {
 
   return (
     <div className="platform-auth-container">
-      <div className="platform-auth-card space-y-6">
-        <div className="text-center space-y-3">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-12 h-12 bg-platform-attention-emphasis rounded-full flex items-center justify-center">
-              <Key className="h-6 w-6 text-platform-fg-on-emphasis" />
+      <div className="platform-auth-content platform-fade-in">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-orange-600 flex items-center justify-center">
+              <Key className="h-6 w-6 text-white" />
             </div>
           </div>
-          <h1 className="platform-heading-xl">Use backup code</h1>
-          <p className="platform-text-muted">
+          <h1 className="text-2xl font-semibold mb-2">Use backup code</h1>
+          <p className="text-sm text-muted-foreground">
             Enter one of your backup codes to access your account
           </p>
         </div>
@@ -95,21 +95,20 @@ export default function BackupCodeVerificationPage() {
         <div className="space-y-6">
           {!success ? (
             <>
-              <PlatformAlert variant="info" className="flex items-start gap-3">
-                <Shield className="h-4 w-4 flex-shrink-0 mt-0.5" />
+              <div className="p-4 bg-yellow-50 border border-yellow-200 text-yellow-700">
+                <Shield className="h-4 w-4 flex-shrink-0" />
                 <div className="text-sm">
                   Each backup code can only be used once. After using a code, 
                   it will be permanently invalidated.
                 </div>
-              </PlatformAlert>
+              </div>
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                <PlatformFormField
-                  label="Backup code"
-                  htmlFor="platform-backup-code"
-                  required
-                  helpText="Enter the 8-character backup code from your saved list"
-                >
+                <div className="space-y-2">
+                  <label htmlFor="platform-backup-code" className="text-sm font-medium">
+                    Backup code *
+                  </label>
+                  <p className="text-xs text-muted-foreground">Enter the 8-character backup code from your saved list</p>
                   <Input
                     id="platform-backup-code"
                     type="text"
@@ -121,7 +120,7 @@ export default function BackupCodeVerificationPage() {
                     autoComplete="off"
                     required
                   />
-                </PlatformFormField>
+                </div>
 
                 <div className="flex items-center space-x-2">
                   <input
@@ -129,24 +128,22 @@ export default function BackupCodeVerificationPage() {
                     id="platform-trust-device"
                     checked={trustDevice}
                     onChange={(e) => setTrustDevice(e.target.checked)}
-                    className="platform-border-radius"
                   />
-                  <Label htmlFor="platform-trust-device" className="text-sm text-platform-fg-default cursor-pointer">
+                  <Label htmlFor="platform-trust-device" className="text-sm cursor-pointer">
                     Trust this device for 30 days
                   </Label>
                 </div>
 
                 {error && (
-                  <PlatformAlert variant="danger" className="flex items-center gap-3">
+                  <div className="p-4 bg-red-50 border border-red-200 text-red-700">
                     <AlertCircle className="h-4 w-4 flex-shrink-0" />
                     <span className="text-sm">{error}</span>
-                  </PlatformAlert>
+                  </div>
                 )}
 
                 <Button 
                   type="submit" 
-                  className="w-full platform-btn-primary" 
-                  size="lg"
+                  className="w-full" 
                   disabled={isLoading || !backupCode.trim()}
                 >
                   {isLoading ? "Verifying..." : "Verify backup code"}
@@ -155,10 +152,10 @@ export default function BackupCodeVerificationPage() {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center space-y-4 py-8">
-              <CheckCircle2 className="h-16 w-16 text-platform-success-fg" />
+              <CheckCircle2 className="h-16 w-16 text-green-600" />
               <div className="text-center space-y-2">
-                <h3 className="platform-heading-md text-platform-success-fg">Verification successful</h3>
-                <p className="platform-text-muted">
+                <h3 className="text-lg font-semibold text-green-600">Verification successful</h3>
+                <p className="text-sm text-muted-foreground">
                   Redirecting you to your dashboard...
                 </p>
               </div>
@@ -167,28 +164,28 @@ export default function BackupCodeVerificationPage() {
         </div>
 
         {!success && (
-          <div className="space-y-4 pt-4 border-t border-platform-border-muted">
-            <div className="flex items-center justify-between text-sm">
+          <div className="space-y-4 pt-4 border-t border-border">
+            <div className="flex items-center justify-between">
               <Link href="/auth/two-factor">
-                <Button variant="ghost" size="sm" className="platform-link flex items-center gap-2">
+                <Button variant="ghost" size="sm" className="text-primary hover:underline flex items-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
                   Back to authenticator
                 </Button>
               </Link>
               
               <Link href="/auth/signin">
-                <Button variant="link" size="sm" className="platform-link">
+                <Button variant="link" size="sm" className="text-primary hover:underline">
                   Sign in differently
                 </Button>
               </Link>
             </div>
             
             <div className="text-center">
-              <p className="platform-text-small">
+              <p className="text-sm">
                 Don&apos;t have backup codes?{" "}
                 <Link 
                   href="/auth/forgot-password" 
-                  className="platform-link"
+                  className="text-primary hover:underline"
                 >
                   Reset your password
                 </Link>

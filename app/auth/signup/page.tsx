@@ -20,8 +20,8 @@ async function SignUpContent({ searchParams }: { searchParams: { error?: string;
           <div className="flex items-center justify-center mb-4">
             <ThemeAwareLogo width={32} height={32} className="w-8 h-8" />
           </div>
-          <h1 className="platform-heading-lg mb-2">Join Data Atmos</h1>
-          <p className="platform-text-muted">Create your account to get started with the platform</p>
+          <h1 className="text-2xl font-semibold mb-2">Join Data Atmos</h1>
+          <p className="text-sm text-muted-foreground">Create your account to get started with the platform</p>
         </div>
 
         <SignUpForm
@@ -29,10 +29,10 @@ async function SignUpContent({ searchParams }: { searchParams: { error?: string;
           message={message ? decodeURIComponent(message) : undefined}
         />
 
-        <div className="text-center pt-6 mt-6 border-t border-platform-border-muted">
-          <p className="platform-text-small">
+        <div className="text-center pt-6 mt-6 border-t border-border">
+          <p className="text-sm">
             Already have an account?{" "}
-            <a href="/auth/signin" className="platform-link font-medium">
+            <a href="/auth/signin" className="text-primary hover:underline font-medium">
               Sign in
             </a>
           </p>

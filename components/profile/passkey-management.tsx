@@ -85,13 +85,13 @@ export function PasskeyManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-sm text-foreground">Manage your passkeys for secure, passwordless authentication</p>
         </div>
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm">
+            <Button size="sm" className="flex-shrink-0">
               <Plus className="h-3 w-3 mr-2" />
               Add Passkey
             </Button>
@@ -124,7 +124,7 @@ export function PasskeyManagement() {
       </div>
 
       {passkeys.length === 0 ? (
-        <div className="text-center py-8 border border-border bg-github-subtle">
+        <div className="text-center py-8 border border-border bg-atmos-subtle">
           <Key className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
           <p className="text-sm text-muted-foreground">No passkeys configured</p>
           <p className="text-xs text-muted-foreground mt-1">Add a passkey to enable passwordless authentication</p>

@@ -56,7 +56,7 @@ export function UserDropdown({ user }: UserDropdownProps) {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="dropdown-github w-72 p-2" align="end" forceMount sideOffset={8}>
+      <DropdownMenuContent className="dropdown-atmos w-72 p-2" align="end" forceMount sideOffset={8}>
         <DropdownMenuLabel className="p-3 border-b border-border">
           <div className="flex items-center space-x-3">
             <Avatar className="profile-avatar h-10 w-10">
