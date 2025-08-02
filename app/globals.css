@@ -4,14 +4,14 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* GitHub-inspired Design System - Light Mode */
+  /*  Design System - Light Mode */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  --primary: #2da44e;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -32,7 +32,7 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary: #2da44e;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
@@ -41,15 +41,15 @@
 }
 
 .dark {
-  /* GitHub-inspired Design System - Dark Mode */
+  /*  Design System - Dark Mode */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.145 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: #3fb950;
+  --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -68,7 +68,7 @@
   --chart-5: oklch(0.645 0.246 16.439);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: #3fb950;
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
@@ -147,10 +147,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
 }
 
-/* GitHub-style Button System */
+/* atmos-style Button System */
 .btn-primary {
   background-color: var(--primary);
-  color: #ffffff !important;
+  color: var(--primary-foreground) !important;
   border: 1px solid var(--primary);
   font-weight: 500;
   transition: all 0.2s cubic-bezier(0.3, 0, 0.5, 1);
@@ -211,8 +211,8 @@ body {
   border-color: color-mix(in srgb, var(--destructive) 90%, black);
 }
 
-/* GitHub-style Input System */
-.input-github {
+/* atmos-style Input System */
+.input-atmos {
   background-color: var(--input);
   border: 1px solid var(--border);
   color: var(--foreground);
@@ -223,13 +223,23 @@ body {
   box-shadow: inset 0 1px 0 rgba(208, 215, 222, 0.2);
 }
 
-.input-github:focus {
+/* Input with icon spacing */
+.input-atmos.pl-8 {
+  padding-left: 2rem;
+}
+
+/* Ensure proper spacing for inputs with icons */
+.input-atmos[class*="pl-"] {
+  padding-left: var(--tw-pl, 2rem);
+}
+
+.input-atmos:focus {
   border-color: var(--ring);
   outline: none;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 20%, transparent);
 }
 
-.input-github::placeholder {
+.input-atmos::placeholder {
   color: var(--muted-foreground);
 }
 
@@ -265,7 +275,7 @@ body {
 }
 
 /* Alert System */
-.alert-github {
+.alert-atmos {
   padding: 16px;
   border: 1px solid var(--border);
   display: flex;
@@ -294,14 +304,14 @@ body {
 }
 
 /* Dropdown Enhancement */
-.dropdown-github {
+.dropdown-atmos {
   background-color: var(--popover);
   border: 1px solid var(--border);
   box-shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
   animation: slideDown 0.2s cubic-bezier(0.3, 0, 0.5, 1);
 }
 
-.dark .dropdown-github {
+.dark .dropdown-atmos {
   box-shadow: 0 8px 24px rgba(1, 4, 9, 0.8);
 }
 
@@ -328,7 +338,7 @@ body {
     font-size: 13px;
   }
 
-  .input-github {
+  .input-atmos {
     font-size: 16px; /* Prevent zoom on iOS */
   }
 }
@@ -361,25 +371,92 @@ body {
 }
 
 /* Utility Classes */
-.text-github-sm {
+.text-atmos-sm {
   font-size: 12px;
   line-height: 18px;
 }
 
-.text-github-base {
+.text-atmos-base {
   font-size: 14px;
   line-height: 20px;
 }
 
-.text-github-lg {
+.text-atmos-lg {
   font-size: 16px;
   line-height: 24px;
 }
 
-.border-github {
+.border-atmos {
   border: 1px solid var(--border);
 }
 
-.bg-github-subtle {
+.bg-atmos-subtle {
   background-color: var(--muted);
+}
+
+/* Platform Auth Container - Minimal Responsive Fixes */
+.platform-auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.platform-auth-content {
+  width: 100%;
+  max-width: 24rem;
+  padding: 2rem;
+}
+
+/* Platform Text Colors - Only what's needed */
+.text-platform-fg-muted {
+  color: var(--muted-foreground);
+}
+
+.border-platform-border-muted {
+  border-color: var(--border);
+}
+
+.text-platform-fg-default {
+  color: var(--foreground);
+}
+
+.bg-platform-canvas-subtle {
+  background-color: var(--muted);
+}
+
+/* Platform Fade In Animation */
+.platform-fade-in {
+  animation: platformFadeIn 0.3s ease-out;
+}
+
+@keyframes platformFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsiveness - Only container fixes */
+@media (max-width: 640px) {
+  .platform-auth-container {
+    padding: 0.5rem;
+  }
+  
+  .platform-auth-content {
+    padding: 1.5rem;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .platform-auth-content {
+    padding: 1rem;
+  }
 }

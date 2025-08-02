@@ -25,8 +25,8 @@ export default async function Home() {
               @x/dataatmos
             </a>
             <span>·</span>
-            <a href="https://github.com/dataatmos" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
-              @github/dataatmos
+            <a href="https://atmos.com/dataatmos" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+              @atmos/dataatmos
             </a>
           </div>
         </footer>

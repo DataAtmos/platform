@@ -67,64 +67,61 @@ export default function OTPPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex">
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm space-y-8">
-          <div className="text-center space-y-2">
-            <h1 className="text-2xl font-semibold tracking-tight">Two-Factor Authentication</h1>
-            <p className="text-sm text-muted-foreground">
-              Verify your identity with a one-time password
-            </p>
-          </div>
-          
-          <div className="space-y-6">
-            {message && (
-              <Alert variant={isError ? "destructive" : "default"}>
-                {isError ? (
-                  <AlertCircle className="h-4 w-4" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-                <AlertDescription>{message}</AlertDescription>
-              </Alert>
-            )}
+    <div className="platform-auth-container">
+      <div className="platform-auth-content platform-fade-in">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-semibold mb-2">Two-Factor Authentication</h1>
+          <p className="text-sm text-muted-foreground">
+            Verify your identity with a one-time password
+          </p>
+        </div>
+        
+        <div className="space-y-6">
+          {message && (
+            <div className={`p-4 border ${isError ? 'bg-red-50 border-red-200 text-red-700' : 'bg-green-50 border-green-200 text-green-700'}`}>
+              {isError ? (
+                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              ) : (
+                <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
+              )}
+              <span className="text-sm">{message}</span>
+            </div>
+          )}
 
-            {!isOtpSent ? (
-              <Button 
-                onClick={requestOTP} 
-                className="w-full" 
-                size="lg"
-                disabled={loading}
-              >
-                <Mail className="w-4 h-4 mr-2" /> 
-                {loading ? "Sending..." : "Send OTP to Email"}
-              </Button>
-            ) : (
-              <div className="space-y-6">
-                <FormField
-                  label="One-Time Password"
-                  description="Check your email for the 6-digit OTP"
-                >
-                  <Input
-                    placeholder="Enter 6-digit OTP"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    maxLength={6}
-                    inputMode="numeric"
-                  />
-                </FormField>
-                
-                <Button
-                  onClick={validateOTP}
-                  disabled={otp.length !== 6 || loading}
-                  className="w-full"
-                  size="lg"
-                >
-                  {loading ? "Validating..." : "Validate OTP"}
-                </Button>
+          {!isOtpSent ? (
+            <Button 
+              onClick={requestOTP} 
+              className="w-full" 
+              disabled={loading}
+            >
+              <Mail className="w-4 h-4 mr-2" /> 
+              {loading ? "Sending..." : "Send OTP to Email"}
+            </Button>
+          ) : (
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  One-Time Password
+                </label>
+                <p className="text-xs text-muted-foreground">Check your email for the 6-digit OTP</p>
+                <Input
+                  placeholder="Enter 6-digit OTP"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  maxLength={6}
+                  inputMode="numeric"
+                />
               </div>
-            )}
-          </div>
+              
+              <Button
+                onClick={validateOTP}
+                disabled={otp.length !== 6 || loading}
+                className="w-full"
+              >
+                {loading ? "Validating..." : "Validate OTP"}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

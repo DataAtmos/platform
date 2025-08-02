@@ -11,7 +11,14 @@ export function LastUsedBadge({ show, className = "" }: LastUsedBadgeProps) {
   return (
     <Badge
       variant="secondary"
-      className={`text-[10px] px-1.5 py-0.5 font-medium text-white border border-green-500/30 bg-gradient-to-br from-green-800 via-green-600 to-green-400 ${className}`}
+      className={`
+        text-[9px] px-2 py-0.5 font-medium uppercase tracking-wide
+        text-white
+        bg-gradient-to-r from-green-500 via-green-600 to-green-700
+        border-0
+        rounded
+        ${className}
+      `}
     >
       LAST USED
     </Badge>

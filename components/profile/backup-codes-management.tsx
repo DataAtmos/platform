@@ -78,7 +78,7 @@ export function BackupCodesManagement({ session }: BackupCodesManagementProps) {
 
   if (!session?.user.twoFactorEnabled) {
     return (
-      <div className="text-center py-8 border border-border bg-github-subtle">
+      <div className="text-center py-8 border border-border bg-atmos-subtle">
         <Shield className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
         <p className="text-sm text-muted-foreground">Two-factor authentication is not enabled</p>
         <p className="text-xs text-muted-foreground mt-1">Enable 2FA to generate backup codes</p>
@@ -88,13 +88,13 @@ export function BackupCodesManagement({ session }: BackupCodesManagementProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-sm text-foreground">Recovery codes for when you lose access to your authenticator app</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" className="flex-shrink-0">
               <RefreshCw className="h-3 w-3 mr-2" />
               Generate Codes
             </Button>
@@ -103,74 +103,69 @@ export function BackupCodesManagement({ session }: BackupCodesManagementProps) {
             <DialogHeader>
               <DialogTitle>Generate Backup Codes</DialogTitle>
               <DialogDescription>
-                Generate new backup codes for your account. Keep these codes safe and secure.
+                Generate new backup codes for your two-factor authentication. Keep these codes safe.
               </DialogDescription>
             </DialogHeader>
-
-            {showCodes && backupCodes.length > 0 ? (
-              <div className="space-y-4">
-                <div className="p-4 border border-border bg-github-subtle">
-                  <div className="grid grid-cols-2 gap-2 text-sm font-mono">
-                    {backupCodes.map((code, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-2 border border-border bg-background"
-                      >
-                        <span>{code}</span>
-                        <Button variant="ghost" size="sm" onClick={() => copyToClipboard(code)} className="h-6 w-6 p-0">
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button onClick={downloadCodes} variant="outline" className="flex-1 bg-transparent">
-                    <Download className="h-3 w-3 mr-2" />
-                    Download
-                  </Button>
-                  <Button onClick={() => copyToClipboard(backupCodes.join("\n"))} variant="outline" className="flex-1">
-                    <Copy className="h-3 w-3 mr-2" />
-                    Copy All
-                  </Button>
-                </div>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input-atmos flex h-8 w-full file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 mt-3"
+                />
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="password" className="text-sm font-medium">
-                    Enter your password to generate backup codes
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-border bg-background text-foreground"
-                    placeholder="Enter your password"
-                  />
-                </div>
-              </div>
-            )}
-
+            </div>
             <DialogFooter>
-              {!showCodes ? (
-                <Button onClick={generateBackupCodes} disabled={isGenerating}>
-                  {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate Codes"}
-                </Button>
-              ) : (
-                <Button onClick={() => setDialogOpen(false)}>Done</Button>
-              )}
+              <Button onClick={generateBackupCodes} disabled={isGenerating}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : "Generate Codes"}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="text-center py-8 border border-border bg-github-subtle">
-        <Shield className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">No backup codes generated yet</p>
-        <p className="text-xs text-muted-foreground mt-1">Generate backup codes to secure your account</p>
-      </div>
+      {showCodes && backupCodes.length > 0 && (
+        <div className="space-y-4">
+          <div className="p-4 border border-border bg-atmos-subtle rounded-md">
+            <div className="grid grid-cols-2 gap-2">
+              {backupCodes.map((code, index) => (
+                <div key={index} className="flex items-center justify-between p-2 bg-background border border-border rounded">
+                  <span className="text-sm font-mono">{code}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => copyToClipboard(code)}
+                    className="h-6 w-6 p-0"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={downloadCodes} variant="outline" size="sm">
+              <Download className="h-3 w-3 mr-2" />
+              Download
+            </Button>
+            <Button
+              onClick={() => {
+                const codesText = backupCodes.join("\n")
+                copyToClipboard(codesText)
+              }}
+              variant="outline"
+              size="sm"
+            >
+              <Copy className="h-3 w-3 mr-2" />
+              Copy All
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

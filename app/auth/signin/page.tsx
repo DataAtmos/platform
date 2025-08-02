@@ -20,8 +20,8 @@ async function SignInContent({ searchParams }: { searchParams: { error?: string;
           <div className="flex items-center justify-center mb-4">
             <ThemeAwareLogo width={32} height={32} className="w-8 h-8" />
           </div>
-          <h1 className="platform-heading-lg mb-2">Sign in to Data Atmos</h1>
-          <p className="platform-text-muted">Welcome back! Please sign in to your account</p>
+          <h1 className="text-2xl font-semibold mb-2">Sign in to Data Atmos</h1>
+          <p className="text-sm text-muted-foreground">Welcome back! Please sign in to your account</p>
         </div>
 
         <SignInForm
@@ -29,10 +29,10 @@ async function SignInContent({ searchParams }: { searchParams: { error?: string;
           message={message ? decodeURIComponent(message) : undefined}
         />
 
-        <div className="text-center pt-6 mt-6 border-t border-platform-border-muted">
-          <p className="platform-text-small">
+        <div className="text-center pt-6 mt-6 border-t border-border">
+          <p className="text-sm">
             New to Data Atmos?{" "}
-            <a href="/auth/signup" className="platform-link font-medium">
+            <a href="/auth/signup" className="text-primary hover:underline font-medium">
               Create an account
             </a>
           </p>
