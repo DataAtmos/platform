@@ -21,7 +21,7 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="container max-w-4xl mx-auto py-8 px-4">
+    <div className="w-full px-5 pt-5">
       <ProfileContent
         session={JSON.parse(JSON.stringify(session))}
         activeSessions={JSON.parse(JSON.stringify(activeSessions))}

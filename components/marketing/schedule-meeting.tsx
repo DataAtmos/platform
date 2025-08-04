@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarCheckIcon } from "@/components/icons/calendar-check"
+import { CalendarCheckIcon } from "@/components/ui/icons/calendar-check"
 
 interface ScheduleMeetingProps {
     calLink?: string
@@ -17,7 +17,7 @@ interface ScheduleMeetingProps {
       <div className="flex items-center justify-center cursor-pointer">
         <button
           onClick={handleScheduleClick}
-          className="group inline-flex items-center gap-2 font-mono text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+          className="group inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
         >
           <CalendarCheckIcon size={12} className="flex-shrink-0" />
           <span className="underline decoration-dotted underline-offset-4 decoration-muted-foreground group-hover:decoration-foreground transition-colors duration-200">

@@ -51,6 +51,7 @@ export function BackupCodesManagement({ session }: BackupCodesManagementProps) {
         },
       })
     } catch (error) {
+      console.error(error)
       toast.error("Failed to generate backup codes")
     } finally {
       setIsGenerating(false)

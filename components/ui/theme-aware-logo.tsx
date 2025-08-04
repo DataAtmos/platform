@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useTheme } from "next-themes"
+import { useTheme } from "@/lib/providers/theme-provider"
 import { useEffect, useState } from "react"
 
 interface ThemeAwareLogoProps {
@@ -18,13 +18,16 @@ export function ThemeAwareLogo({ width, height, className }: ThemeAwareLogoProps
     setMounted(true)
   }, [])
 
-  if (!mounted) {
-    return <Image src="/logo.svg" alt="Data Atmos" width={width} height={height} className={className} />
-  }
-
-  const logoSrc = theme === "dark" ? "/logo-white.svg" : "/logo.svg"
+  // Default to light theme logo until mounted to prevent hydration mismatch
+  const logoSrc = mounted && theme === "dark" ? "/logo-white.svg" : "/logo.svg"
 
   return (
-    <Image src={logoSrc || "/placeholder.svg"} alt="Data Atmos" width={width} height={height} className={className} />
+    <Image 
+      src={logoSrc} 
+      alt="Data Atmos" 
+      width={width} 
+      height={height} 
+      className={className} 
+    />
   )
 }

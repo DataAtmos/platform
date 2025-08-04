@@ -25,7 +25,6 @@ export const client = createAuthClient({
       }
     },
     onSuccess(ctx) {
-      // Store bearer token for API access if present
       const bearerToken = ctx.response.headers.get("set-auth-token");
       if (bearerToken) {
         localStorage.setItem("auth-token", bearerToken);

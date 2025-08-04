@@ -1,9 +1,9 @@
 "use client"
 
-import { CpuIcon } from "@/components/icons/cpu"
-import { FlameIcon } from "@/components/icons/flame"
-import { LayersIcon } from "@/components/icons/layers"
-import { RollerCoasterIcon } from "@/components/icons/roller-coaster"
+import { CpuIcon } from "@/components/ui/icons/cpu"
+import { FlameIcon } from "@/components/ui/icons/flame"
+import { LayersIcon } from "@/components/ui/icons/layers"
+import { RollerCoasterIcon } from "@/components/ui/icons/roller-coaster";
 
 export function MarketingContent() {
   const features = [
@@ -38,25 +38,28 @@ export function MarketingContent() {
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto z-10">
-      <div className="space-y-4 sm:space-y-6">
+    <div className="w-full max-w-lg mx-auto">
+      <p className="text-xs text-muted-foreground leading-relaxed mb-4 text-center">
+        OLTP, OLAP, and AI orchestration is about to get easier with Data Atmos
+      </p>
+      <div className="space-y-4">
         {features.map((feature, index) => {
           const IconComponent = feature.icon
           return (
-            <div key={index} className="flex gap-3 sm:gap-4 items-start">
+            <div key={index} className="flex gap-3 items-start">
               <div className="mt-0.5 flex-shrink-0">
                 <IconComponent
                   size={16}
-                  className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  className="text-muted-foreground"
                 />
               </div>
-              <p className="font-mono text-xs text-muted-foreground leading-relaxed">{formatText(feature.text)}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed text-left">{formatText(feature.text)}</p>
             </div>
           )
         })}
 
-        <div className="pt-3 sm:pt-4 border-t border-border/40">
-          <p className="font-mono text-xs text-muted-foreground leading-relaxed text-center">
+        <div className="pt-4 border-t border-border/40">
+          <p className="text-xs text-muted-foreground leading-relaxed text-center">
             DataOps orchestration just got simpler—and your{" "}
             costs just got a whole lot smaller.
           </p>

@@ -51,24 +51,24 @@ export function PasskeySignInButton({ showLastUsed = false }: PasskeySignInButto
         variant="outline"
         onClick={handlePasskeySignIn}
         disabled={loading}
-        className="w-full relative platform-btn platform-btn-outline platform-btn-md bg-transparent"
+        className="w-full relative"
       >
         {loading ? (
           <>
-            <Loader2 size={12} className="animate-spin mr-2" />
-            <span className="platform-text-small">Authenticating...</span>
+            <Loader2 size={16} className="animate-spin mr-2" />
+            <span className="text-sm">Authenticating...</span>
           </>
         ) : (
           <>
             <Fingerprint className="w-4 h-4 mr-2" />
-            <span className="platform-text-small">Sign in with Passkey</span>
+            <span className="text-sm">Sign in with Passkey</span>
             <LastUsedBadge show={showLastUsed} className="absolute -top-1 -right-1" />
           </>
         )}
       </Button>
       {error && (
-        <div className="platform-alert platform-alert-danger">
-          <span className="platform-text-small">{error}</span>
+        <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <span className="text-sm text-red-700 dark:text-red-300">{error}</span>
         </div>
       )}
     </div>

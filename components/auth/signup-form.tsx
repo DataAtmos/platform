@@ -56,18 +56,18 @@ export function SignUpForm({ error, message }: SignUpFormProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {errorMessage && (
-        <div className="platform-alert platform-alert-danger flex items-center gap-2">
-          <AlertCircle className="h-3 w-3 flex-shrink-0" />
-          <span className="platform-text-small">{errorMessage}</span>
+        <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+          <span className="text-sm text-red-700 dark:text-red-300">{errorMessage}</span>
         </div>
       )}
 
       {successMessage && (
-        <div className="platform-alert platform-alert-success flex items-center gap-2">
-          <CheckCircle className="h-3 w-3 flex-shrink-0" />
-          <span className="platform-text-small">{successMessage}</span>
+        <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+          <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+          <span className="text-sm text-green-700 dark:text-green-300">{successMessage}</span>
         </div>
       )}
 
@@ -76,57 +76,57 @@ export function SignUpForm({ error, message }: SignUpFormProps) {
           e.preventDefault()
           handleSignUp()
         }}
-        className="space-y-4"
+        className="space-y-6"
       >
-        <div className="platform-form-field">
-          <label htmlFor="platform-name" className="platform-form-label">
+        <div className="space-y-2">
+          <label htmlFor="name" className="text-sm font-medium text-foreground">
             Full Name *
           </label>
           <div className="relative">
-            <User className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-platform-fg-muted" />
+            <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              id="platform-name"
+              id="name"
               type="text"
               placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="platform-input pl-8"
+              className="pl-10"
               autoComplete="name"
             />
           </div>
         </div>
 
-        <div className="platform-form-field">
-          <label htmlFor="platform-email" className="platform-form-label">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-sm font-medium text-foreground">
             Email address *
           </label>
           <div className="relative">
-            <Mail className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-platform-fg-muted" />
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              id="platform-email"
+              id="email"
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="platform-input pl-8"
+              className="pl-10"
               autoComplete="email"
             />
           </div>
         </div>
 
-        <div className="platform-form-field">
-          <label htmlFor="platform-password" className="platform-form-label">
+        <div className="space-y-2">
+          <label htmlFor="password" className="text-sm font-medium text-foreground">
             Password *
           </label>
           <div className="relative">
-            <Lock className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-platform-fg-muted" />
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              id="platform-password"
+              id="password"
               type="password"
               placeholder="Create a password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="platform-input pl-8"
+              className="pl-10"
               autoComplete="new-password"
             />
           </div>
@@ -135,11 +135,11 @@ export function SignUpForm({ error, message }: SignUpFormProps) {
         <Button
           type="submit"
           disabled={loading || !name || !email || !password}
-          className="w-full platform-btn platform-btn-primary platform-btn-md"
+          className="w-full"
         >
           {loading ? (
             <>
-              <Loader2 size={12} className="animate-spin mr-2" />
+              <Loader2 size={16} className="animate-spin mr-2" />
               Creating account...
             </>
           ) : (
@@ -148,20 +148,25 @@ export function SignUpForm({ error, message }: SignUpFormProps) {
         </Button>
       </form>
 
-      <div className="platform-separator">
-        <span className="platform-separator-text">or continue with</span>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">or continue with</span>
+        </div>
       </div>
 
       <GoogleSignInButton />
 
       <div className="text-center">
-        <p className="platform-text-small text-platform-fg-muted">
+        <p className="text-sm text-muted-foreground">
           By creating an account, you agree to our{" "}
-          <a href="/terms" className="platform-link">
+          <a href="/terms" className="text-primary hover:text-primary/80">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="/privacy" className="platform-link">
+          <a href="/privacy" className="text-primary hover:text-primary/80">
             Privacy Policy
           </a>
         </p>
