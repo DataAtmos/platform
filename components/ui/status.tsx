@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 export type StatusProps = ComponentProps<typeof Badge> & {
-  status: 'online' | 'offline' | 'maintenance' | 'degraded';
+  status: 'verified' | 'unverified' | 'online' | 'offline' | 'maintenance' | 'degraded';
 };
 
 export const Status = ({ className, status, ...props }: StatusProps) => (
@@ -23,6 +23,8 @@ export const StatusIndicator = ({
     <span
       className={cn(
         'absolute inline-flex h-full w-full animate-ping rounded-full opacity-75',
+        'group-[.verified]:bg-green-500',
+        'group-[.unverified]:bg-yellow-500',
         'group-[.online]:bg-emerald-500',
         'group-[.offline]:bg-red-500',
         'group-[.maintenance]:bg-blue-500',
@@ -32,6 +34,8 @@ export const StatusIndicator = ({
     <span
       className={cn(
         'relative inline-flex h-2 w-2 rounded-full',
+        'group-[.verified]:bg-green-500',
+        'group-[.unverified]:bg-yellow-500',
         'group-[.online]:bg-emerald-500',
         'group-[.offline]:bg-red-500',
         'group-[.maintenance]:bg-blue-500',
@@ -51,6 +55,8 @@ export const StatusLabel = ({
   <span className={cn('text-muted-foreground', className)} {...props}>
     {children ?? (
       <>
+        <span className="hidden group-[.verified]:block">Verified</span>
+        <span className="hidden group-[.unverified]:block">Unverified</span>
         <span className="hidden group-[.online]:block">Online</span>
         <span className="hidden group-[.offline]:block">Offline</span>
         <span className="hidden group-[.maintenance]:block">Maintenance</span>
